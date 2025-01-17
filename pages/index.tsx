@@ -2,19 +2,10 @@ import React, { useState } from "react";
 import AvatarList from "../components/AvatarList";
 import TaskColumn from "../components/TaskColumn";
 
-type Task = {
-  id: string;
-  title: string;
-  description: string;
-  assignee: string;
-  points: number;
-  startDate: string;
-  endDate: string;
-};
-
 const dummyUsers = [
-  { id: "1", name: "Alice", avatarUrl: "/avatars/alice.png" },
-  { id: "2", name: "Bob", avatarUrl: "/avatars/bob.png" },
+  { id: "1", name: "Selin", avatarUrl: "/avatars/selin.jpg" },
+  { id: "2", name: "Yoda", avatarUrl: "/avatars/yoda.jpg" },
+  { id: "3", name: "Ayla", avatarUrl: "/avatars/ayla.jpg" },
 ];
 
 const dummyTasks = {
@@ -23,7 +14,7 @@ const dummyTasks = {
       id: "1",
       title: "Task 1",
       description: "Description 1",
-      assignee: "Alice",
+      assignee: "Yoda",
       points: 3,
       startDate: "2025-01-01",
       endDate: "2025-01-05",
@@ -34,7 +25,7 @@ const dummyTasks = {
   done: [],
 };
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   const [tasks, setTasks] = useState(dummyTasks);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
@@ -79,7 +70,7 @@ const HomePage: React.FC = () => {
       return;
     }
 
-    const newTask: Task = {
+    const newTask = {
       id: Date.now().toString(),
       title: taskTitle,
       description: taskDescription,
@@ -94,50 +85,24 @@ const HomePage: React.FC = () => {
       open: [...prev.open, newTask],
     }));
 
-    // Clear form fields after submission
     setTaskTitle("");
     setTaskDescription("");
     setSelectedAssignee(null);
     setTaskPoints(0);
     setStartDate("");
     setEndDate("");
-    setIsPopupOpen(false); // Close popup after task creation
+    setIsPopupOpen(false);
   };
 
   return (
     <div className="p-4 space-y-6">
-      <AvatarList users={dummyUsers} />
-      <div className="flex space-x-4">
-        <TaskColumn
-          title="Open"
-          tasks={tasks.open}
-          onDropTask={(taskId, targetColumn) =>
-            handleDropTask(taskId, targetColumn)
-          }
-        />
-        <TaskColumn
-          title="In Progress"
-          tasks={tasks.inProgress}
-          onDropTask={(taskId, targetColumn) =>
-            handleDropTask(taskId, targetColumn)
-          }
-        />
-        <TaskColumn
-          title="In Review"
-          tasks={tasks.inReview}
-          onDropTask={(taskId, targetColumn) =>
-            handleDropTask(taskId, targetColumn)
-          }
-        />
-        <TaskColumn
-          title="Done"
-          tasks={tasks.done}
-          onDropTask={(taskId, targetColumn) =>
-            handleDropTask(taskId, targetColumn)
-          }
-        />
+      <div className="text-center mb-6">
+        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 shadow-lg">
+          Task Management
+        </h1>
       </div>
 
+      <AvatarList users={dummyUsers} />
       <div className="mt-4">
         <button
           onClick={() => setIsPopupOpen(true)}
@@ -146,8 +111,28 @@ const HomePage: React.FC = () => {
           Create New Task
         </button>
       </div>
-
-      {/* Popup */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <TaskColumn
+          title="Open"
+          tasks={tasks.open}
+          onDropTask={(taskId) => handleDropTask(taskId, "open")}
+        />
+        <TaskColumn
+          title="In Progress"
+          tasks={tasks.inProgress}
+          onDropTask={(taskId) => handleDropTask(taskId, "inProgress")}
+        />
+        <TaskColumn
+          title="In Review"
+          tasks={tasks.inReview}
+          onDropTask={(taskId) => handleDropTask(taskId, "inReview")}
+        />
+        <TaskColumn
+          title="Done"
+          tasks={tasks.done}
+          onDropTask={(taskId) => handleDropTask(taskId, "done")}
+        />
+      </div>
       {isPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
@@ -181,7 +166,7 @@ const HomePage: React.FC = () => {
                 >
                   <option value="">Select Assignee</option>
                   {dummyUsers.map((user) => (
-                    <option key={user.id} value={user.name}>
+                    <option key={user.id} value={user.id}>
                       {user.name}
                     </option>
                   ))}
@@ -242,7 +227,7 @@ const HomePage: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                 >
                   Create Task
                 </button>

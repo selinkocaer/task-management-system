@@ -14,7 +14,7 @@ type Task = {
 type TaskColumnProps = {
   title: string;
   tasks: Task[];
-  onDropTask: (taskId: string, targetColumn: string) => void;
+  onDropTask: (taskId: string) => void;
 };
 
 const TaskColumn: React.FC<TaskColumnProps> = ({
@@ -28,23 +28,19 @@ const TaskColumn: React.FC<TaskColumnProps> = ({
 
   const handleDrop = (e: React.DragEvent) => {
     const taskId = e.dataTransfer.getData("text");
-    onDropTask(taskId, title.toLowerCase().replace(" ", ""));
+    onDropTask(taskId);
   };
 
   return (
     <div
-      className="bg-gray-100 p-4 rounded shadow w-80"
+      className="bg-gray-100 p-4 rounded shadow w-100"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
       <h2 className="text-lg font-bold mb-4">{title}</h2>
       <div className="space-y-4">
         {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onDragStart={(e) => e.dataTransfer.setData("text", task.id)}
-          />
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
     </div>
